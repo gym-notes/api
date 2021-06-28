@@ -1,11 +1,11 @@
 const express = require("express");
-const app = express();
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
 const cors = require("cors");
 const swaggerUI = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 require("dotenv/config");
+
+const app = express();
 
 const swaggerOptions = {
   swaggerDefinition: {
@@ -19,7 +19,7 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
 app.use("/swagger", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 
 const workoutRoute = require("./routes/workouts");
 const defaultRoute = require("./routes/defaults");
