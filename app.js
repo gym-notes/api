@@ -16,8 +16,17 @@ app.get("/", (req, res) => {
   res.send("We are on home route");
 });
 
-mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true }, () =>
-  console.log("connected to DB")
-);
+mongoose
+  .connect(process.env.DB_CONNECTION, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("Successfully connected to the database");
+  })
+  .catch((err) => {
+    console.log("Could not connect to the database. Exiting now...", err);
+    process.exit();
+  });
 
 app.listen(3000, () => console.log("App listening on port 3000!"));
