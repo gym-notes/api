@@ -3,18 +3,29 @@ const app = express();
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const swaggerUI = require("swagger-ui-express");
+const swaggerJsDoc = require("swagger-jsdoc");
 require("dotenv/config");
 
+const swaggerOptions = {
+  swaggerDefinition: {
+    title: "gym notes api",
+    version: "1.0.0",
+  },
+  apis: ["./routes/*.js"],
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+
+app.use("/swagger", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 app.use(cors());
 app.use(bodyParser.json());
 
 const workoutRoute = require("./routes/workouts");
+const defaultRoute = require("./routes/defaults");
 
 app.use("/workouts", workoutRoute);
-
-app.get("/", (req, res) => {
-  res.send("We are on home route");
-});
+app.use("/defaults", defaultRoute);
 
 mongoose
   .connect(process.env.DB_CONNECTION, {
