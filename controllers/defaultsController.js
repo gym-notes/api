@@ -1,15 +1,15 @@
-exports.getOperation = (req, res) => {
+export function getOperation(req, res) {
   res.status(200).json({ message: "You used the get http endpoint!" });
-};
+}
 
-exports.postOperation = (req, res) => {
+export function postOperation(req, res) {
   res.status(200).json({ message: "You used the post http endpoint!" });
-};
+}
 
-exports.deleteOperation = (req, res) => {
+export function deleteOperation(req, res) {
   res.status(200).json({ message: "You used the delete http endpoint!" });
-};
+}
 
-exports.patchOperation = (req, res) => {
+export function patchOperation(req, res) {
   res.status(200).json({ message: "You used the patch http endpoint!" });
-};
+}

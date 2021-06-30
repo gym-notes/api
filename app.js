@@ -1,9 +1,11 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const swaggerUI = require("swagger-ui-express");
-const swaggerJsDoc = require("swagger-jsdoc");
-require("dotenv/config");
+import express, { json } from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import { serve, setup } from "swagger-ui-express";
+import swaggerJsDoc from "swagger-jsdoc";
+import "dotenv/config";
+import workoutRoute from "./routes/workouts.js";
+import defaultRoute from "./routes/defaults.js";
 
 const app = express();
 
@@ -17,12 +19,9 @@ const swaggerOptions = {
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
-app.use("/swagger", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+app.use("/swagger", serve, setup(swaggerDocs));
 app.use(cors());
-app.use(express.json());
-
-const workoutRoute = require("./routes/workouts");
-const defaultRoute = require("./routes/defaults");
+app.use(json());
 
 app.use("/workouts", workoutRoute);
 app.use("/defaults", defaultRoute);

@@ -1,6 +1,7 @@
-const express = require("express");
-const router = express.Router();
-const Workout = require("../models/Workout");
+import { Router } from "express";
+import Workout from "../models/Workout.js";
+
+const router = Router();
 
 router.get("/:workoutId", async (req, res) => {
   try {
@@ -58,4 +59,4 @@ router.patch("/:workoutId", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

@@ -1,5 +1,7 @@
-const router = require("express").Router();
-const defaultsController = require("../controllers/defaultsController");
+import express from "express";
+import * as defaultsController from "../controllers/defaultsController.js";
+
+const router = express.Router();
 
 /**
  * @openapi
@@ -49,4 +51,4 @@ router.patch("", defaultsController.patchOperation);
  */
 router.delete("", defaultsController.deleteOperation);
 
-module.exports = router;
+export default router;
