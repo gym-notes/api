@@ -1,25 +1,12 @@
 import express, { json } from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import { serve, setup } from "swagger-ui-express";
-import swaggerJsDoc from "swagger-jsdoc";
 import "dotenv/config";
 import workoutRoute from "./routes/workouts.js";
 import defaultRoute from "./routes/defaults.js";
 
 const app = express();
 
-const swaggerOptions = {
-  swaggerDefinition: {
-    title: "gym notes api",
-    version: "1.0.0",
-  },
-  apis: ["./routes/*.js"],
-};
-
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
-
-app.use("/swagger", serve, setup(swaggerDocs));
 app.use(cors());
 app.use(json());
 
