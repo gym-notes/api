@@ -1,17 +1,15 @@
 import express, { json } from "express";
 import mongoose from "mongoose";
 import cors from "cors";
+import installRoutes from "./routes/routesInstaller.js";
 import "dotenv/config";
-import workoutRoute from "./routes/workouts.js";
-import defaultRoute from "./routes/defaults.js";
 
 const app = express();
 
 app.use(cors());
 app.use(json());
 
-app.use("/workouts", workoutRoute);
-app.use("/defaults", defaultRoute);
+installRoutes(app);
 
 mongoose
   .connect(process.env.DB_CONNECTION, {
