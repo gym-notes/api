@@ -1,7 +1,7 @@
 import express, { json } from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import installRoutes from "./routes/routesInstaller.js";
+import installRoutes from "./installers/routesInstaller.js";
 import "dotenv/config";
 
 const app = express();
