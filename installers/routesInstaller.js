@@ -1,4 +1,3 @@
-import authentication from "../middleware/authentication.js";
 import authRoute from "../routes/auth.js";
 import defaultRoute from "../routes/defaults.js";
 import workoutRoute from "../routes/workouts.js";
