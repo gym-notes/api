@@ -24,4 +24,6 @@ mongoose
     process.exit();
   });
 
-app.listen(3000, () => console.log("App listening on port 3000!"));
+app.listen(3000, () =>
+  console.log("App is up and ready to rock on port 3000!")
+);
