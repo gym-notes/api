@@ -1,31 +1,30 @@
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 import bcrypt from "bcryptjs";
-import user from "../models/User.js";
+import User from "../models/User.js";
 
 export default {
   async login(req, res) {
     const { email, password } = req.body;
 
-    const foundUser = await user.findOne({
+    const foundUser = await User.findOne({
       email: email,
     });
 
     if (!foundUser)
-      res.status(400).json({ message: "wrong email or password" });
+      res.status(400).json({ message: "wrong email or password" }).end(); //TODO End request properly
 
     const correctPassword = await bcrypt.compare(password, foundUser.password);
 
-    if (correctPassword) {
-      const secret = process.env.ACCESS_TOKEN_SECRET;
-      const lifetime = parseInt(process.env.ACCESS_TOKEN_LIFETIME_IN_SECONDS);
+    if (!correctPassword)
+      return res.status(401).json({ message: "wrong email or password" });
 
-      const token = jwt.sign({ email }, secret, { expiresIn: lifetime });
+    const secret = process.env.ACCESS_TOKEN_SECRET;
+    const lifetime = parseInt(process.env.ACCESS_TOKEN_LIFETIME_IN_SECONDS);
 
-      return res.status(200).json({ token });
-    }
+    const token = jwt.sign({ email }, secret, { expiresIn: lifetime });
 
-    return res.status(401).json({ message: "wrong email or password" });
+    return res.status(200).json({ token });
   },
 
   async register(req, res) {
@@ -34,7 +33,7 @@ export default {
     const passwordHash = await bcrypt.hash(password, 10);
 
     try {
-      await user.create({
+      await User.create({
         email,
         password: passwordHash,
       });
@@ -47,5 +46,19 @@ export default {
     }
 
     res.status(201).end();
+  },
+
+  async remindPassword(req, res) {
+    const { email } = req.body;
+
+    const user = await User.findOne({
+      email: email,
+    });
+
+    if (!user) res.status(400).json({ message: "wrong email" });
+
+    const token = jwt.sign({ email }, user.password, { expiresIn: 600 });
+
+    res.status(200).json({ resetPasswordToken: token }).end();
   },
 };
