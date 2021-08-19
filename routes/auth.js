@@ -15,5 +15,10 @@ router.post(
   validate(remindPasswordSchema),
   authController.remindPassword
 );
+router.post(
+  "/reset-password",
+  validate(resetPasswordSchema),
+  authController.resetPassword
+);
 
 export default router;

@@ -12,7 +12,7 @@ export default {
     });
 
     if (!foundUser)
-      res.status(400).json({ message: "wrong email or password" }).end(); //TODO End request properly
+      return res.status(400).json({ message: "wrong email or password" });
 
     const correctPassword = await bcrypt.compare(password, foundUser.password);
 
@@ -39,9 +39,9 @@ export default {
       });
     } catch (error) {
       if (error.code === 11000) {
-        res.status(400).json({ message: "email already taken" });
+        return res.status(400).json({ message: "email already taken" });
       } else {
-        res.status(400).json({ message: "something went wrong" });
+        return res.status(500).json({ message: "something went wrong" });
       }
     }
 
@@ -60,5 +60,40 @@ export default {
     const token = jwt.sign({ email }, user.password, { expiresIn: 600 });
 
     res.status(200).json({ resetPasswordToken: token }).end();
+  },
+
+  async resetPassword(req, res) {
+    const { token, newPassword } = req.body;
+
+    const decoded = jwt.decode(token);
+
+    if (!decoded) return res.status(400).json({ message: "invalid token" });
+
+    const user = await User.findOne({ email: decoded.email });
+
+    if (!user) return res.status(400).json({ message: "invalid token" });
+
+    try {
+      jwt.verify(token, user.password);
+    } catch {
+      return res.status(401).json({ message: "invalid token" });
+    }
+
+    const newPasswordSameAsOld = await bcrypt.compare(
+      newPassword,
+      user.password
+    );
+
+    if (newPasswordSameAsOld)
+      return res
+        .status(400)
+        .json({ message: "new password can't be the same as old" });
+
+    const newPasswordHash = await bcrypt.hash(newPassword, 10);
+
+    user.password = newPasswordHash;
+    await user.save();
+
+    res.status(204).end();
   },
 };
