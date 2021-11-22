@@ -1,5 +1,5 @@
 function validate(schema) {
-  return function (req, res, next) {
+  return (req, res, next) => {
     const options = {
       abortEarly: false,
       allowUnknown: false,
@@ -12,7 +12,8 @@ function validate(schema) {
       return res.status(400).json({
         errors: result.error.details.map((details) => details.message),
       });
-    else next();
+
+    return next();
   };
 }
 

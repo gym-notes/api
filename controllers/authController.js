@@ -1,26 +1,26 @@
-import jwt from "jsonwebtoken";
-import "dotenv/config";
-import bcrypt from "bcryptjs";
-import User from "../models/User.js";
+import jwt from 'jsonwebtoken';
+import 'dotenv/config';
+import bcrypt from 'bcryptjs';
+import User from '../models/User.js';
 
 export default {
   async login(req, res) {
     const { email, password } = req.body;
 
     const foundUser = await User.findOne({
-      email: email,
+      email,
     });
 
     if (!foundUser)
-      return res.status(400).json({ message: "wrong email or password" });
+      return res.status(400).json({ message: 'wrong email or password' });
 
     const correctPassword = await bcrypt.compare(password, foundUser.password);
 
     if (!correctPassword)
-      return res.status(401).json({ message: "wrong email or password" });
+      return res.status(401).json({ message: 'wrong email or password' });
 
     const secret = process.env.ACCESS_TOKEN_SECRET;
-    const lifetime = parseInt(process.env.ACCESS_TOKEN_LIFETIME_IN_SECONDS);
+    const lifetime = parseInt(process.env.ACCESS_TOKEN_LIFETIME_IN_SECONDS, 10);
 
     const token = jwt.sign({ email }, secret, { expiresIn: lifetime });
 
@@ -39,23 +39,23 @@ export default {
       });
     } catch (error) {
       if (error.code === 11000) {
-        return res.status(400).json({ message: "email already taken" });
-      } else {
-        return res.status(500).json({ message: "something went wrong" });
+        return res.status(400).json({ message: 'email already taken' });
       }
+
+      return res.status(500).json({ message: 'something went wrong' });
     }
 
-    res.status(201).end();
+    return res.status(201).end();
   },
 
   async remindPassword(req, res) {
     const { email } = req.body;
 
     const user = await User.findOne({
-      email: email,
+      email,
     });
 
-    if (!user) res.status(400).json({ message: "wrong email" });
+    if (!user) res.status(400).json({ message: 'wrong email' });
 
     const token = jwt.sign({ email }, user.password, { expiresIn: 600 });
 
@@ -67,16 +67,16 @@ export default {
 
     const decoded = jwt.decode(token);
 
-    if (!decoded) return res.status(400).json({ message: "invalid token" });
+    if (!decoded) return res.status(400).json({ message: 'invalid token' });
 
     const user = await User.findOne({ email: decoded.email });
 
-    if (!user) return res.status(400).json({ message: "invalid token" });
+    if (!user) return res.status(400).json({ message: 'invalid token' });
 
     try {
       jwt.verify(token, user.password);
     } catch {
-      return res.status(401).json({ message: "invalid token" });
+      return res.status(401).json({ message: 'invalid token' });
     }
 
     const newPasswordSameAsOld = await bcrypt.compare(
@@ -94,6 +94,6 @@ export default {
     user.password = newPasswordHash;
     await user.save();
 
-    res.status(204).end();
+    return res.status(204).end();
   },
 };

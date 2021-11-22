@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const workoutSchema = new mongoose.Schema({
   title: {
@@ -11,4 +11,4 @@ const workoutSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model("Workout", workoutSchema);
+export default mongoose.model('Workout', workoutSchema);
