@@ -1,9 +1,8 @@
-version: "3.8"
+version: '3.8'
 
 services:
   mongo-db:
     image: mongo
-    restart: always
     ports:
       - 27888:27017
     environment:
@@ -15,8 +14,8 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      DB_CONNECTION: "mongodb://mongoadmin:secret@mongo-db/?authSource=admin"
+      DB_CONNECTION: 'mongodb://mongoadmin:secret@mongo-db/?authSource=admin'
     ports:
-      - "8080:3000"
+      - '8080:3000'
     depends_on:
       - mongo-db
