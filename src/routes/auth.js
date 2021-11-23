@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import authController from '../controllers/authController.js';
 import validate from '../middleware/validation.js';
-import loginSchema from '../requests/authSchemas/loginRequestSchema.js';
-import registerSchema from '../requests/authSchemas/registerRequestSchema.js';
-import resetPasswordSchema from '../requests/authSchemas/resetPasswordRequestSchema.js';
-import remindPasswordSchema from '../requests/authSchemas/remindPasswordRequestSchema.js';
+import loginSchema from '../validations/loginRequestSchema.js';
+import registerSchema from '../validations/registerRequestSchema.js';
+import resetPasswordSchema from '../validations/resetPasswordRequestSchema.js';
+import remindPasswordSchema from '../validations/remindPasswordRequestSchema.js';
 
 const router = Router();
 
