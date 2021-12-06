@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 
-function authenticate(req, res, next) {
+function authorize(req, res, next) {
   const authHeader = req.headers.authorization;
   const token = authHeader && authHeader.split(' ')[1];
 
@@ -11,10 +11,11 @@ function authenticate(req, res, next) {
     if (err) return res.status(401).json({ message: err });
 
     req.user = user;
+
     return next();
   });
 
   return null;
 }
 
-export default authenticate;
+export default authorize;

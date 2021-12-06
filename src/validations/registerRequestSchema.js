@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-const schema = Joi.object({
+const registerSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string()
     .required()
@@ -15,6 +15,12 @@ const schema = Joi.object({
     .required()
     .valid(Joi.ref('password'))
     .messages({ 'any.only': '{{#label}} does not match' }),
+  firstName: Joi.string().min(2).required(),
+  weight: Joi.number().min(20).required(),
+  height: Joi.number().min(50).required(),
+  birthDate: Joi.date().required(),
+  gender: Joi.string().valid('male', 'female').required(),
+  country: Joi.string().min(3).required(),
 });
 
-export default schema;
+export default registerSchema;

@@ -22,25 +22,36 @@ export default {
     const secret = process.env.ACCESS_TOKEN_SECRET;
     const lifetime = parseInt(process.env.ACCESS_TOKEN_LIFETIME_IN_SECONDS, 10);
 
-    const token = jwt.sign({ email }, secret, { expiresIn: lifetime });
+    const token = jwt.sign({ sub: foundUser.id, email }, secret, {
+      expiresIn: lifetime,
+    });
 
     return res.status(200).json({ token });
   },
 
   async register(req, res) {
-    const { email, password } = req.body;
+    const registerRequest = req.body;
 
-    const passwordHash = await bcrypt.hash(password, 10);
+    const passwordHash = await bcrypt.hash(registerRequest.password, 10);
 
     try {
       await User.create({
-        email,
+        email: registerRequest.email,
         password: passwordHash,
+        data: {
+          firstName: registerRequest.firstName,
+          weight: registerRequest.weight,
+          height: registerRequest.height,
+          birthDate: registerRequest.birthDate,
+          gender: registerRequest.gender,
+          country: registerRequest.country,
+        },
       });
     } catch (error) {
       if (error.code === 11000) {
         return res.status(400).json({ message: 'email already taken' });
       }
+      console.log(error.message);
 
       return res.status(500).json({ message: 'something went wrong' });
     }
