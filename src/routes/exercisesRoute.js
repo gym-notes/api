@@ -13,4 +13,6 @@ router.post(
   exercisesController.createExercise
 );
 
+router.get('/my', authorize, exercisesController.getMyExercises);
+
 export default router;

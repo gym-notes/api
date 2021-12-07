@@ -17,4 +17,8 @@ export default class ExerciseService {
       .then((data) => ({ success: true, data }))
       .catch((err) => ({ success: false, errors: err.errors }));
   }
+
+  getExercisesByUserId(userId) {
+    return this.ExerciseModel.find({ userId });
+  }
 }
