@@ -1,9 +1,9 @@
 import authRoute from './authRoute.js';
 import workoutRoute from './workoutsRoute.js';
-import plansRoute from './plansRoute';
+import exercisesRoute from './exercisesRoute.js';
 
 export default (app) => {
   app.use('/api/auth', authRoute);
   app.use('/api/workouts', workoutRoute);
-  app.use('/api/plans', plansRoute);
+  app.use('/api/exercises', exercisesRoute);
 };
