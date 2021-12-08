@@ -17,4 +17,10 @@ export default class PlanService {
       .then((data) => ({ success: true, data }))
       .catch((err) => ({ success: false, errors: err.errors }));
   }
+
+  async getPlansByUserId(userId) {
+    const plans = await this.PlanModel.find({ userId }).exec();
+
+    return plans;
+  }
 }

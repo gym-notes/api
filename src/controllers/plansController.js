@@ -35,4 +35,14 @@ export default {
       ? res.status(201).json({ planId: result.data.id })
       : res.status(400).json({ errors: result.errors });
   },
+
+  async getMyPlans(req, res) {
+    const plans = await planService.getPlansByUserId(req.user.sub);
+
+    return plans.length > 0
+      ? res.status(200).json({
+          plans: plans.map((plan) => ({ id: plan.id, name: plan.name })),
+        })
+      : res.status(204).send();
+  },
 };

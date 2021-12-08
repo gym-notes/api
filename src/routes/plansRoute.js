@@ -13,4 +13,6 @@ router.post(
   plansController.createPlan
 );
 
+router.get('/my', authenticate, plansController.getMyPlans);
+
 export default router;
