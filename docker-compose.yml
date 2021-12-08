@@ -16,6 +16,6 @@ services:
     environment:
       DB_CONNECTION: 'mongodb://mongoadmin:secret@mongo-db/?authSource=admin'
     ports:
-      - '8080:3000'
+      - '3000:3000'
     depends_on:
       - mongo-db
