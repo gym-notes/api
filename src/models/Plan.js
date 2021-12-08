@@ -2,19 +2,21 @@ import mongoose from 'mongoose';
 
 const planScheme = new mongoose.Schema(
   {
-    title: {
+    name: {
       type: String,
       required: true,
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
+      required: true,
     },
     exercises: [
       {
         exerciseId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'Exercise',
+          required: true,
         },
         series: {
           type: Number,

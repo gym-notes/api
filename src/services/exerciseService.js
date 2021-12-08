@@ -1,3 +1,5 @@
+import mongoose from 'mongoose';
+
 export default class ExerciseService {
   constructor(exerciseModel) {
     this.ExerciseModel = exerciseModel;
@@ -7,6 +9,18 @@ export default class ExerciseService {
     const foundExercise = await this.ExerciseModel.findOne(exercise);
 
     return foundExercise != null;
+  }
+
+  async exercisesExist(exercises) {
+    const exercisesExist = await this.ExerciseModel.find({
+      _id: {
+        $in: exercises.map((exercise) =>
+          mongoose.Types.ObjectId(exercise.exerciseId)
+        ),
+      },
+    }).exec();
+
+    return exercisesExist.length === exercises.length;
   }
 
   createExercise(exercise) {
