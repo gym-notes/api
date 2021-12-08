@@ -1,6 +1,8 @@
 import express, { json } from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
 import installRoutes from './routes/installer.js';
 import config from './config/index.js';
 
@@ -9,11 +11,12 @@ const app = express();
 app.use(cors());
 app.use(json());
 
-app.get('/', (req, res) => {
-  res.send('Ok');
-});
-
 installRoutes(app);
+
+const pathName = dirname(fileURLToPath(import.meta.url));
+app.get('/', (req, res) => {
+  res.sendFile(path.join(pathName, '/assets/index.html'));
+});
 
 mongoose
   .connect(config.database.connectionString, {
