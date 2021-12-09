@@ -6,7 +6,7 @@ const workoutSchema = new mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: 'Plan',
     },
-    startDate: {
+    date: {
       type: Date,
       required: true,
     },

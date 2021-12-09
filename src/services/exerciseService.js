@@ -35,4 +35,23 @@ export default class ExerciseService {
   getExercisesByUserId(userId) {
     return this.ExerciseModel.find({ userId });
   }
+
+  async exercisesBelongToUserAsync(userId, exercises) {
+    const foundExercises = await this.ExerciseModel.find({
+      _id: {
+        $in: exercises.map((exercise) =>
+          mongoose.Types.ObjectId(exercise.exerciseId)
+        ),
+      },
+    }).exec();
+
+    if (foundExercises.length !== exercises.length) return false;
+
+    for (let i = 0; i < foundExercises.length; i += 1) {
+      // eslint-disable-next-line eqeqeq
+      if (foundExercises[i].userId != userId) return false;
+    }
+
+    return true;
+  }
 }

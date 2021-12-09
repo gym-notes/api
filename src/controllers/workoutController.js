@@ -1,67 +1,56 @@
 import Workout from '../models/Workout.js';
+import Plan from '../models/Plan.js';
+import Exercise from '../models/Exercise.js';
+import WorkoutService from '../services/workoutService.js';
+import PlanService from '../services/planService.js';
+import ExerciseService from '../services/exerciseService.js';
+
+const exerciseService = new ExerciseService(Exercise);
+const planService = new PlanService(Plan);
+const workoutService = new WorkoutService(Workout);
 
 export default {
-  async getWorkoutById(req, res) {
-    try {
-      const workouts = await Workout.findById(req.params.workoutId);
-      res.json(workouts);
-    } catch {
-      res
-        .status(500)
-        .json({ message: 'Something went wrong, try again later.' });
-    }
-  },
-
-  async getWorkouts(req, res) {
-    try {
-      const workouts = await Workout.find();
-      res.json(workouts);
-    } catch {
-      res
-        .status(500)
-        .json({ message: 'Something went wrong, try again later.' });
-    }
-  },
-
-  async deleteWorkoutById(req, res) {
-    try {
-      await Workout.findByIdAndDelete(req.params.workoutId);
-      res.status(204).json();
-    } catch {
-      res
-        .status(500)
-        .json({ message: 'Something went wrong, try again later.' });
-    }
-  },
-
   async createWorkout(req, res) {
-    const workout = new Workout({
-      title: req.body.title,
-      date: req.body.date,
-    });
+    const workout = req.body;
+    workout.userId = req.user.sub;
+    workout.date = new Date().toISOString().slice(0, 10);
 
-    workout
-      .save()
-      .then((data) => {
-        res.json(data);
-      })
-      .catch((err) => {
-        res.json({ message: err });
-      });
-  },
+    const plan = await planService.getPlanById(workout.planId);
 
-  async updateWorkoutById(req, res) {
-    try {
-      const updatedWorkout = await Workout.updateOne(
-        { _id: req.params.workoutId },
-        { $set: { title: req.body.title } }
+    if (!plan) return res.status(400).json({ errors: ["plan doesn't exists"] });
+
+    // eslint-disable-next-line eqeqeq
+    if (plan.userId != req.user.sub)
+      return res
+        .status(400)
+        .json({ errors: ["plan doesn't belong to this user"] });
+
+    const exercisesExist = await exerciseService.exercisesExist(
+      workout.exercises
+    );
+
+    if (!exercisesExist)
+      return res
+        .status(400)
+        .json({ errors: "some of your exercises don't exist" });
+
+    const exercisesBelongToUser =
+      await exerciseService.exercisesBelongToUserAsync(
+        workout.userId,
+        workout.exercises
       );
 
-      res.status(200).json(updatedWorkout);
-    } catch {
-      res
-        .status(500)
-        .json({ message: 'Something went wrong, try again later.' });
-    }
+    if (!exercisesBelongToUser)
+      return res
+        .status(400)
+        .json({ errors: ["some of exercises doesn't belong to user"] });
+
+    // console.log(workout);
+
+    const result = await workoutService.createWorkoutAsync(workout);
+
+    return result.success
+      ? res.status(201).json({ workoutId: result.data.id })
+      : res.status(400).json({ errors: result.error, xd: 'xd' });
   },
 };
