@@ -3,6 +3,16 @@ export default class WorkoutService {
     this.WorkoutModel = workout;
   }
 
+  async getWorkoutById(workoutId) {
+    const workout = await this.WorkoutModel.findById(workoutId)
+      .populate('planId')
+      .populate({
+        path: 'exercises',
+        populate: { path: 'exerciseId', model: 'Exercise' },
+      });
+    return workout;
+  }
+
   async getLatestWorkoutAsync(userId) {
     const workout = await this.WorkoutModel.findOne({ userId })
       .populate('planId')

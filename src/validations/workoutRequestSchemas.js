@@ -21,4 +21,8 @@ const createWorkoutSchema = () => {
   });
 };
 
-export default { createWorkoutSchema: createWorkoutSchema() };
+const getWorkoutById = Joi.object({
+  workoutId: objectId(),
+});
+
+export default { createWorkoutSchema: createWorkoutSchema(), getWorkoutById };
