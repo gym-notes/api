@@ -10,6 +10,31 @@ const planService = new PlanService(Plan);
 const workoutService = new WorkoutService(Workout);
 
 export default {
+  async getLatestWorkout(req, res) {
+    const userId = req.user.sub;
+
+    const workout = await workoutService.getLatestWorkoutAsync(userId);
+
+    if (!workout) return res.status(404);
+
+    const response = {
+      id: workout.id,
+      name: workout.planId.name,
+      duration: workout.duration,
+      date: workout.date.toISOString().slice(0, 10),
+      exercises: workout.exercises.map((exercise) => ({
+        id: exercise.exerciseId.id,
+        name: exercise.exerciseId.name,
+        sets: exercise.sets.map((set) => ({
+          reps: set.reps,
+          weight: set.weight,
+        })),
+      })),
+    };
+
+    return res.status(200).json(response);
+  },
+
   async createWorkout(req, res) {
     const workout = req.body;
     workout.userId = req.user.sub;

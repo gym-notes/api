@@ -13,4 +13,6 @@ router.post(
   workoutController.createWorkout
 );
 
+router.get('/latest', authorize, workoutController.getLatestWorkout);
+
 export default router;
