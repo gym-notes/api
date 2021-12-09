@@ -45,4 +45,20 @@ export default {
         })
       : res.status(204).send();
   },
+
+  async getPlanById(req, res) {
+    const { planId } = req.params;
+
+    const plan = await planService.getPlanById(planId);
+
+    if (plan == null) return res.status(404).send();
+
+    // eslint-disable-next-line eqeqeq
+    if (plan.userId != req.user.sub)
+      return res.status(403).json({ errors: ['It is not your plan'] });
+
+    return res
+      .status(200)
+      .json({ id: plan.id, name: plan.name, exercises: plan.exercises });
+  },
 };

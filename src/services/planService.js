@@ -23,4 +23,10 @@ export default class PlanService {
 
     return plans;
   }
+
+  async getPlanById(planId) {
+    const plan = await this.PlanModel.findById(planId).exec();
+
+    return plan;
+  }
 }
