@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import authenticate from '../middleware/authentication.js';
 import { validateBody, validateParams } from '../middleware/validation.js';
-import plansController from '../controllers/plansController.js';
+import plansController from '../controllers/planController.js';
 import requestSchemas from '../validations/planRequestSchemas.js';
 
 const router = Router();

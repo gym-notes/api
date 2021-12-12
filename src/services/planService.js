@@ -25,7 +25,12 @@ export default class PlanService {
   }
 
   async getPlanById(planId) {
-    const plan = await this.PlanModel.findById(planId).exec();
+    const plan = await this.PlanModel.findById(planId)
+      .populate({
+        path: 'exercises',
+        populate: { path: 'exerciseId', model: 'Exercise' },
+      })
+      .exec();
 
     return plan;
   }

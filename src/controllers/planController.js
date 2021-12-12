@@ -57,8 +57,19 @@ export default {
     if (plan.userId != req.user.sub)
       return res.status(403).json({ errors: ['It is not your plan'] });
 
-    return res
-      .status(200)
-      .json({ id: plan.id, name: plan.name, exercises: plan.exercises });
+    const result = {
+      id: plan.id,
+      name: plan.name,
+      exercises: plan.exercises.map((exercise) => ({
+        id: exercise.id,
+        exerciseId: exercise.exerciseId.id,
+        name: exercise.exerciseId.name,
+        series: exercise.series,
+        reps: exercise.reps,
+        weight: exercise.weight,
+      })),
+    };
+
+    return res.status(200).json(result);
   },
 };
