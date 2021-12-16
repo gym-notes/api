@@ -9,12 +9,15 @@ import remindPasswordSchema from '../validations/remindPasswordRequestSchema.js'
 const router = Router();
 
 router.post('/login', validateBody(loginSchema), authController.login);
+
 router.post('/register', validateBody(registerSchema), authController.register);
+
 router.post(
   '/remind-password',
   validateBody(remindPasswordSchema),
   authController.remindPassword
 );
+
 router.post(
   '/reset-password',
   validateBody(resetPasswordSchema),
