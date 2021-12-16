@@ -8,4 +8,8 @@ export default class UsersService {
 
     return user;
   }
+
+  async findByIdAndUpdateAsync(userId, update) {
+    await this.UserModel.findOneAndUpdate(userId, { data: update }).exec();
+  }
 }
