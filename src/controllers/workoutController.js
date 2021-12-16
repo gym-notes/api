@@ -28,6 +28,42 @@ function mapWorkoutToResponse(workout) {
 }
 
 export default {
+  async getWorkoutsSummaries(req, res) {
+    const workouts = await workoutService.getWorkouts({ userId: req.user.sub });
+
+    if (workouts.length < 1) return res.status(204).send();
+
+    let years = workouts.map((workout) => ({
+      year: workout.date.getYear() + 1900,
+      month: workout.date.getMonth() + 1,
+    }));
+
+    years = years.filter(
+      (value, index, self) =>
+        index ===
+        self.findIndex((t) => t.year === value.year && t.month === value.month)
+    );
+
+    const result = years.map((year) => ({
+      year: year.year,
+      month: year.month,
+      workouts: workouts
+        .filter(
+          (workout) =>
+            workout.date.getYear() + 1900 === year.year &&
+            workout.date.getMonth() + 1 === year.month
+        )
+        .map((workout) => ({
+          id: workout.id,
+          planName: workout.planId.name,
+          duration: workout.duration,
+          exercisesNumber: workout.exercises.length,
+        })),
+    }));
+
+    return res.status(200).json(result);
+  },
+
   async getWorkoutById(req, res) {
     const { workoutId } = req.params;
     const userId = req.user.sub;
@@ -86,8 +122,6 @@ export default {
       return res
         .status(400)
         .json({ errors: ["some of exercises doesn't belong to user"] });
-
-    // console.log(workout);
 
     const result = await workoutService.createWorkoutAsync(workout);
 

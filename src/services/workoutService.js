@@ -3,6 +3,16 @@ export default class WorkoutService {
     this.WorkoutModel = workout;
   }
 
+  async getWorkouts(workoutFilter) {
+    const workouts = await this.WorkoutModel.find(workoutFilter)
+      .sort({
+        date: 'desc',
+      })
+      .populate('planId');
+
+    return workouts;
+  }
+
   async getWorkoutById(workoutId) {
     const workout = await this.WorkoutModel.findById(workoutId)
       .populate('planId')
@@ -20,10 +30,8 @@ export default class WorkoutService {
         path: 'exercises',
         populate: { path: 'exerciseId', model: 'Exercise' },
       })
-      .sort({ _id: -1 })
+      .sort({ date: -1 })
       .exec();
-
-    console.log(workout);
 
     return workout;
   }

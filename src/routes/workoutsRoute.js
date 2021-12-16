@@ -15,6 +15,8 @@ router.post(
 
 router.get('/latest', authorize, workoutController.getLatestWorkout);
 
+router.get('/summaries', authorize, workoutController.getWorkoutsSummaries);
+
 router.get(
   '/:workoutId',
   authorize,
