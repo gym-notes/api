@@ -7,11 +7,14 @@ import requests from '../validations/accountRequestsSchema.js';
 const router = Router();
 
 router.get('/me', authorize, accountController.getMyAccountInfo);
+
 router.put(
   '/me',
   authorize,
   validateBody(requests),
   accountController.updateMyAccountInfo
 );
+
+router.get('/records', authorize, accountController.getUserRecords);
 
 export default router;

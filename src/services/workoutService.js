@@ -44,4 +44,10 @@ export default class WorkoutService {
       .then((data) => ({ success: true, data }))
       .catch((error) => ({ success: false, errors: error.errors }));
   }
+
+  async getWorkoutsByUserIdAsync(userId) {
+    const workouts = await this.WorkoutModel.find({ userId }).exec();
+
+    return workouts;
+  }
 }

@@ -54,4 +54,8 @@ export default class ExerciseService {
 
     return true;
   }
+
+  async getUserExercisesAsync(userId) {
+    return this.ExerciseModel.find({ userId });
+  }
 }

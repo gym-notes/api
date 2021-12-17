@@ -15,7 +15,7 @@ const createWorkoutSchema = () => {
   });
 
   return Joi.object({
-    planId: objectId(),
+    planId: objectId().required(),
     duration: Joi.number().min(1).required(),
     exercises: Joi.array().min(1).items(exercise).required(),
   });
