@@ -35,7 +35,7 @@ export default {
     const passwordHash = await bcrypt.hash(registerRequest.password, 10);
 
     try {
-      await User.create({
+      const createdUser = await User.create({
         email: registerRequest.email,
         password: passwordHash,
         data: {
@@ -47,6 +47,22 @@ export default {
           country: registerRequest.country,
         },
       });
+
+      const secret = process.env.ACCESS_TOKEN_SECRET;
+      const lifetime = parseInt(
+        process.env.ACCESS_TOKEN_LIFETIME_IN_SECONDS,
+        10
+      );
+
+      const token = jwt.sign(
+        { sub: createdUser.id, email: createdUser.email },
+        secret,
+        {
+          expiresIn: lifetime,
+        }
+      );
+
+      return res.status(200).json({ token });
     } catch (error) {
       if (error.code === 11000) {
         return res.status(400).json({ message: 'email already taken' });
@@ -55,8 +71,6 @@ export default {
 
       return res.status(500).json({ message: 'something went wrong' });
     }
-
-    return res.status(201).end();
   },
 
   async remindPassword(req, res) {
