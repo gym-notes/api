@@ -7,6 +7,22 @@ const planService = new PlanService(Plan);
 const exerciseService = new ExerciseService(Exercise);
 
 export default {
+  async deletePlanById(req, res) {
+    const { planId } = req.params;
+
+    const plan = await planService.getPlanById(planId);
+
+    if (!plan) return res.status(404).json({ message: "plan doesn't exists" });
+
+    // eslint-disable-next-line eqeqeq
+    if (plan.userId != req.user.sub)
+      return res.status(403).json({ message: 'this is not your plan' });
+
+    await planService.deletePlanById(planId);
+
+    return res.status(201).json(plan).send();
+  },
+
   async createPlan(req, res) {
     const plan = {
       name: req.body.name,

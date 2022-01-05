@@ -22,4 +22,11 @@ router.get(
   plansController.getPlanById
 );
 
+router.delete(
+  '/:planId',
+  authenticate,
+  validateParams(requestSchemas.deletePlanByIdSchema),
+  plansController.deletePlanById
+);
+
 export default router;

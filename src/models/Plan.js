@@ -32,6 +32,9 @@ const planScheme = new mongoose.Schema(
         },
       },
     ],
+    deleted: {
+      type: mongoose.Schema.Types.Boolean,
+    },
   },
   { collection: 'Plans' }
 );

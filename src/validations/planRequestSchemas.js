@@ -21,4 +21,12 @@ const getPlanByIdSchema = Joi.object({
   planId: objectId().required(),
 });
 
-export default { createPlanSchema: createPlanSchema(), getPlanByIdSchema };
+const deletePlanByIdSchema = Joi.object({
+  planId: objectId().required(),
+});
+
+export default {
+  createPlanSchema: createPlanSchema(),
+  getPlanByIdSchema,
+  deletePlanByIdSchema,
+};

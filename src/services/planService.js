@@ -3,7 +3,19 @@ export default class PlanService {
     this.PlanModel = planModel;
   }
 
+  async deletePlanById(planId) {
+    const plan = await this.PlanModel.findById(planId);
+
+    if (!plan) return;
+
+    plan.deleted = true;
+    await plan.save();
+  }
+
   async planExistsAsync(plan) {
+    const filter = plan;
+    filter.deleted = { $in: [false, null] };
+
     const foundPlan = await this.PlanModel.findOne(plan);
 
     return foundPlan != null;
@@ -19,19 +31,23 @@ export default class PlanService {
   }
 
   async getPlansByUserId(userId) {
-    const plans = await this.PlanModel.find({ userId }).exec();
+    const filter = { userId, deleted: { $in: [false, null] } };
+
+    const plans = await this.PlanModel.find(filter).exec();
 
     return plans;
   }
 
   async getPlanById(planId) {
-    const plan = await this.PlanModel.findById(planId)
+    const filter = { planId, deleted: { $in: [false, null] } };
+
+    const plan = await this.PlanModel.find(filter)
       .populate({
         path: 'exercises',
         populate: { path: 'exerciseId', model: 'Exercise' },
       })
       .exec();
 
-    return plan;
+    return plan.deleted ? null : plan;
   }
 }
