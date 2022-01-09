@@ -6,7 +6,7 @@ const objectId = JoiObjectId(Joi);
 const createWorkoutSchema = () => {
   const set = Joi.object({
     reps: Joi.number().min(1).required(),
-    weight: Joi.number().min(1).required(),
+    weight: Joi.number().min(0).required(),
   });
 
   const exercise = Joi.object({
