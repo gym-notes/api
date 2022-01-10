@@ -39,9 +39,9 @@ export default class PlanService {
   }
 
   async getPlanById(planId) {
-    const filter = { planId, deleted: { $in: [false, null] } };
+    const filter = { _id: planId, deleted: { $in: [false, null] } };
 
-    const plan = await this.PlanModel.find(filter)
+    const plan = await this.PlanModel.findOne(filter)
       .populate({
         path: 'exercises',
         populate: { path: 'exerciseId', model: 'Exercise' },
