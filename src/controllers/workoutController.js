@@ -103,25 +103,15 @@ export default {
         .status(400)
         .json({ errors: ["plan doesn't belong to this user"] });
 
-    const exercisesExist = await exerciseService.exercisesExist(
-      workout.exercises
+    const exercisesExist = await exerciseService.userExercisesExistAsync(
+      workout.exercises,
+      workout.userId
     );
 
     if (!exercisesExist)
       return res
         .status(400)
         .json({ errors: "some of your exercises don't exist" });
-
-    const exercisesBelongToUser =
-      await exerciseService.exercisesBelongToUserAsync(
-        workout.userId,
-        workout.exercises
-      );
-
-    if (!exercisesBelongToUser)
-      return res
-        .status(400)
-        .json({ errors: ["some of exercises doesn't belong to user"] });
 
     const result = await workoutService.createWorkoutAsync(workout);
 

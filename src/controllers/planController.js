@@ -38,7 +38,10 @@ export default {
     if (planExists)
       return res.status(400).json({ errors: 'plan already exists' });
 
-    const exercisesExist = await exerciseService.exercisesExist(plan.exercises);
+    const exercisesExist = await exerciseService.userExercisesExistAsync(
+      plan.exercises,
+      req.user.sub
+    );
 
     if (!exercisesExist)
       return res

@@ -11,16 +11,22 @@ export default class ExerciseService {
     return foundExercise != null;
   }
 
-  async exercisesExist(exercises) {
-    const exercisesExist = await this.ExerciseModel.find({
+  async userExercisesExistAsync(exercises, userId) {
+    const unDuplicatedExercises = exercises.filter(
+      (element, index, array) =>
+        array.findIndex((t) => t.exerciseId === element.exerciseId) === index
+    );
+
+    const foundExercises = await this.ExerciseModel.find({
       _id: {
-        $in: exercises.map((exercise) =>
+        $in: unDuplicatedExercises.map((exercise) =>
           mongoose.Types.ObjectId(exercise.exerciseId)
         ),
       },
+      userId,
     }).exec();
 
-    return exercisesExist.length === exercises.length;
+    return foundExercises.length === unDuplicatedExercises.length;
   }
 
   createExercise(exercise) {
