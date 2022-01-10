@@ -7,7 +7,7 @@ export default {
   async getMyExercises(req, res) {
     const exercises = await exerciseService.getExercisesByUserId(req.user.sub);
 
-    if (exercises.length < 1) return res.status(204);
+    if (exercises.length < 1) return res.status(204).send();
 
     return res
       .status(200)
