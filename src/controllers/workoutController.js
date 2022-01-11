@@ -58,6 +58,7 @@ export default {
           planName: workout.planId.name,
           duration: workout.duration,
           exercisesNumber: workout.exercises.length,
+          date: workout.date,
         })),
     }));
 
