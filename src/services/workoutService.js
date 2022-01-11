@@ -30,7 +30,7 @@ export default class WorkoutService {
         path: 'exercises',
         populate: { path: 'exerciseId', model: 'Exercise' },
       })
-      .sort({ date: -1 })
+      .sort({ _id: -1 })
       .exec();
 
     return workout;
